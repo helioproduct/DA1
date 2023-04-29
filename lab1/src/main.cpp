@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <string>
+#include <cstdint>
 
 const size_t MAX_STRING_LEN = 2049;
 const size_t RADIX_SIZE = 16;
