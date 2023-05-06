@@ -1,3 +1,7 @@
+# dirs
+venv
+.idea
+
 # Prerequisites
 *.d
 
