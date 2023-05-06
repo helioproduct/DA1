@@ -43,11 +43,11 @@ struct MyString {
         return *this;
     }
 
-    friend std::ostream & operator << (std::ostream & out, const MyString & str) {
+    friend MyString operator << (MyString out, const MyString & str) {
         for (size_t i = 0; i < str.Size; ++i) {
             out << str.Data[i];
         }
-        return out;
+        return reinterpret_cast<const MyString &>(out);
     }
 
     ~MyString() {
