@@ -9,23 +9,37 @@ struct node {
     int priority;
     uint64_t value;
     node *left, *right;
-};
 
-node* newNode(char *key, uint64_t value) {
-    node* temp = new node;
-    temp->key = new char[MAX_KEY_LEN];
-    memcpy(temp->key, key, MAX_KEY_LEN);
-    temp->value = value;
-    temp->priority = rand();
-    temp->left = temp->right = nullptr;
-    return temp;
-}
+
+    node(char *key, uint64_t value) {
+        this->key = new char[MAX_KEY_LEN];
+        memcpy(this->key, key, MAX_KEY_LEN);
+        this->value = value;
+        this->priority = rand();
+        this->left = this->right = nullptr;
+    }
+
+    ~node() {
+        delete[] key;
+    }
+
+};
+//
+//node* newNode(char *key, uint64_t value) {
+//    node* temp = new node;
+//    temp->key = new char[MAX_KEY_LEN];
+//    memcpy(temp->key, key, MAX_KEY_LEN);
+//    temp->value = value;
+//    temp->priority = rand();
+//    temp->left = temp->right = nullptr;
+//    return temp;
+//}
 
 void destroy(node *node) {
     if (node != nullptr) {
-        delete[] node->key;
         destroy(node->left);
         destroy(node->right);
+        delete node;
     }
 }
 
@@ -66,28 +80,30 @@ void insert(node*& root, node* item) {
         split(root, item->left, item->right, item->key);
         root = item;
     } else {
-        if (strcmp(item->key, root->key) < 0)
+        if (strcmp(item->key, root->key) < 0) {
             insert(root->left, item);
-        else
+        }
+        else {
             insert(root->right, item);
+        }
     }
 }
 
 void remove(node*& root, char *key) {
     if (root == nullptr)
         return;
-
-    if (strcmp(root->key,key)==0) {
+    if (strcmp(root->key,key) == 0) {
         node* temp = merge(root->left, root->right);
-        delete (root);
+        delete root;
         root = temp;
         return;
     }
-
-    if (strcmp(root->key,key)>0)
-        remove(root->left,key);
-    else
-        remove(root->right,key);
+    if (strcmp(root->key,key)>0) {
+        remove(root->left, key);
+    }
+    else {
+        remove(root->right, key);
+    }
 }
 
 node *search(node *root, char *key) {
@@ -111,11 +127,10 @@ void toLower(char *str) {
     }
 }
 
-
 int main() {
-    std::ios::sync_with_stdio(false);
-    std::cout.tie(nullptr);
-    std::cin.tie(nullptr);
+//    std::ios::sync_with_stdio(false);
+//    std::cout.tie(nullptr);
+//    std::cin.tie(nullptr);
 
     srand(time(nullptr));
     node* root = nullptr;
@@ -132,7 +147,7 @@ int main() {
             if (search(root, key)) {
                 std::cout << "Exist" << "\n";
             } else {
-                insert(root, newNode(key, value));
+                insert(root, new node(key, value));
                 std::cout << "OK" << "\n";
             }
         }
@@ -148,6 +163,7 @@ int main() {
         }
         else {
             toLower(command);
+            std::cout << "NoSuchWord" << "\n";
             node *found_node = search(root, command);
             if (found_node) {
                 std::cout << "OK: " << found_node->value << "\n";
@@ -159,4 +175,6 @@ int main() {
     destroy(root);
     delete[] command;
     delete[] key;
+
+    return 0;
 }
