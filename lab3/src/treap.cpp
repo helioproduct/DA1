@@ -1,6 +1,6 @@
-#include <iostream>
-#include <cstring>
 #include <cstdint>
+#include <cstring>
+#include <iostream>
 
 const int MAX_KEY_LEN = 257;
 
@@ -10,7 +10,6 @@ struct node {
     uint64_t value;
     node *left, *right;
 
-
     node(char *key, uint64_t value) {
         this->key = new char[MAX_KEY_LEN];
         memcpy(this->key, key, MAX_KEY_LEN);
@@ -19,13 +18,10 @@ struct node {
         this->left = this->right = nullptr;
     }
 
-    ~node() {
-        delete[] key;
-    }
-
+    ~node() { delete[] key; }
 };
 //
-//node* newNode(char *key, uint64_t value) {
+// node* newNode(char *key, uint64_t value) {
 //    node* temp = new node;
 //    temp->key = new char[MAX_KEY_LEN];
 //    memcpy(temp->key, key, MAX_KEY_LEN);
@@ -43,8 +39,7 @@ void destroy(node *node) {
     }
 }
 
-
-void split(node* root, node*& left, node*& right, char *key) {
+void split(node *root, node *&left, node *&right, char *key) {
     if (root == nullptr) {
         left = right = nullptr;
         return;
@@ -58,7 +53,7 @@ void split(node* root, node*& left, node*& right, char *key) {
     }
 }
 
-node* merge(node* left, node* right) {
+node *merge(node *left, node *right) {
     if (left == nullptr) return right;
     if (right == nullptr) return left;
 
@@ -71,7 +66,7 @@ node* merge(node* left, node* right) {
     }
 }
 
-void insert(node*& root, node* item) {
+void insert(node *&root, node *item) {
     if (root == nullptr) {
         root = item;
         return;
@@ -82,26 +77,23 @@ void insert(node*& root, node* item) {
     } else {
         if (strcmp(item->key, root->key) < 0) {
             insert(root->left, item);
-        }
-        else {
+        } else {
             insert(root->right, item);
         }
     }
 }
 
-void remove(node*& root, char *key) {
-    if (root == nullptr)
-        return;
-    if (strcmp(root->key,key) == 0) {
-        node* temp = merge(root->left, root->right);
+void remove(node *&root, char *key) {
+    if (root == nullptr) return;
+    if (strcmp(root->key, key) == 0) {
+        node *temp = merge(root->left, root->right);
         delete root;
         root = temp;
         return;
     }
-    if (strcmp(root->key,key)>0) {
+    if (strcmp(root->key, key) > 0) {
         remove(root->left, key);
-    }
-    else {
+    } else {
         remove(root->right, key);
     }
 }
@@ -109,11 +101,9 @@ void remove(node*& root, char *key) {
 node *search(node *root, char *key) {
     if (root == nullptr) {
         return nullptr;
-    }
-    else if (strcmp(root->key, key) == 0) {
+    } else if (strcmp(root->key, key) == 0) {
         return root;
-    }
-    else if (strcmp(root->key, key) > 0) {
+    } else if (strcmp(root->key, key) > 0) {
         return search(root->left, key);
     }
     return search(root->right, key);
@@ -122,53 +112,57 @@ node *search(node *root, char *key) {
 void toLower(char *str) {
     // Loop through each character in the string
     for (int i = 0; i < strlen(str); i++) {
-        // Use the tolower standard function to convert the character to lowercase
+        // Use the tolower standard function to convert the character to
+        // lowercase
         str[i] = tolower(str[i]);
     }
 }
 
 int main() {
-//    std::ios::sync_with_stdio(false);
-//    std::cout.tie(nullptr);
-//    std::cin.tie(nullptr);
+    //    std::ios::sync_with_stdio(false);
+    //    std::cout.tie(nullptr);
+    //    std::cin.tie(nullptr);
 
     srand(time(nullptr));
-    node* root = nullptr;
+    node *root = nullptr;
 
     char *command = new char[MAX_KEY_LEN];
     char *key = new char[MAX_KEY_LEN];
     uint64_t value;
 
     while (std::cin >> command) {
-
         if (strcmp(command, "+") == 0) {
             std::cin >> key >> value;
             toLower(key);
             if (search(root, key)) {
-                std::cout << "Exist" << "\n";
+                std::cout << "Exist"
+                          << "\n";
             } else {
                 insert(root, new node(key, value));
-                std::cout << "OK" << "\n";
+                std::cout << "OK"
+                          << "\n";
             }
-        }
-        else if (strcmp(command, "-") == 0) {
+        } else if (strcmp(command, "-") == 0) {
             std::cin >> key;
             toLower(key);
             if (search(root, key)) {
                 remove(root, key);
-                std::cout << "OK" << "\n";
+                std::cout << "OK"
+                          << "\n";
             } else {
-                std::cout << "NoSuchWord" << "\n";
+                std::cout << "NoSuchWord"
+                          << "\n";
             }
-        }
-        else {
+        } else {
             toLower(command);
-            std::cout << "NoSuchWord" << "\n";
+            std::cout << "NoSuchWord"
+                      << "\n";
             node *found_node = search(root, command);
             if (found_node) {
                 std::cout << "OK: " << found_node->value << "\n";
             } else {
-                std::cout << "NoSuchWord" << "\n";
+                std::cout << "NoSuchWord"
+                          << "\n";
             }
         }
     }

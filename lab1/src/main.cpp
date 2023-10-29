@@ -1,7 +1,7 @@
-#include <iostream>
-#include <cstring>
-#include <string>
 #include <cstdint>
+#include <cstring>
+#include <iostream>
+#include <string>
 
 const size_t MAX_STRING_LEN = 2049;
 const size_t RADIX_SIZE = 16;
@@ -13,7 +13,7 @@ struct MyString {
     static const size_t MAX_STRING_SIZE = 2049;
 
     size_t Size;
-    char* Data;
+    char *Data;
 
     MyString() {
         Size = 0;
@@ -33,8 +33,8 @@ struct MyString {
         }
     }
 
-    MyString & operator = (const MyString & another) {
-        delete [] Data;
+    MyString &operator=(const MyString &another) {
+        delete[] Data;
         Size = another.Size;
         Data = new char[Size];
         for (size_t i = 0; i < Size; ++i) {
@@ -43,23 +43,20 @@ struct MyString {
         return *this;
     }
 
-    friend MyString operator << (MyString out, const MyString & str) {
+    friend MyString operator<<(MyString out, const MyString &str) {
         for (size_t i = 0; i < str.Size; ++i) {
             out << str.Data[i];
         }
         return reinterpret_cast<const MyString &>(out);
     }
 
-    ~MyString() {
-        delete [] Data;
-    }
+    ~MyString() { delete[] Data; }
 };
 
 typedef struct Item {
     uint64_t key;
     MyString value;
 } item_t;
-
 
 uint64_t get_radix(uint64_t number, size_t n) {
     return (number >> (RADIX_SIZE * n)) & RADIX_MASK;
@@ -89,7 +86,7 @@ void radix_sort(item_t *array, size_t len) {
             count[i] = count[i] + count[i - 1];
         }
 
-        for (long long i = (long long) len - 1; i >= 0; --i) {
+        for (long long i = (long long)len - 1; i >= 0; --i) {
             size_t index = count[get_radix(array[i].key, radix)] - 1;
             result[index].key = array[i].key;
             result[index].value = array[i].value;
@@ -138,7 +135,8 @@ int main() {
 
     radix_sort(array, size);
     for (size_t i = 0; i < size; i++) {
-        std::cout << array[i].key << "\t" << array[i].value << "\n";
+        std::cout << array[i].key << "\t";
+        std::cout << array[i].value << "\n";
     }
 
     delete[] array;

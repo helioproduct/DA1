@@ -1,6 +1,7 @@
 # dirs
 venv
 .idea
+.vscode
 
 # Prerequisites
 *.d

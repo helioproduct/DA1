@@ -1,6 +1,6 @@
 #include <iostream>
-#include <vector>
 #include <string>
+#include <vector>
 
 std::vector<int> calculateZ(const std::string &input) {
     int n = input.length();
@@ -9,21 +9,21 @@ std::vector<int> calculateZ(const std::string &input) {
     int left = 0;
     int right = 0;
 
-    for(int k = 1; k < n; ++k) {
-        if(k > right) {
+    for (int k = 1; k < n; ++k) {
+        if (k > right) {
             left = right = k;
-            while(right < n && input[right] == input[right - left]) {
+            while (right < n && input[right] == input[right - left]) {
                 right++;
             }
             Z[k] = right - left;
             right--;
         } else {
             int k1 = k - left;
-            if(Z[k1] < right - k + 1) {
+            if (Z[k1] < right - k + 1) {
                 Z[k] = Z[k1];
             } else {
                 left = k;
-                while(right < n && input[right] == input[right - left]) {
+                while (right < n && input[right] == input[right - left]) {
                     right++;
                 }
                 Z[k] = right - left;
@@ -39,8 +39,8 @@ void searchPattern(const string &text, const string &pattern) {
     int pattern_size = pattern.size();
     vector<int> Z = calculateZ(concat);
 
-    for(int i = 0; i < Z.size(); ++i) {
-        if(Z[i] == pattern_size) {
+    for (int i = 0; i < Z.size(); ++i) {
+        if (Z[i] == pattern_size) {
             std::cout << i - pattern_size - 1 << '\n';
         }
     }

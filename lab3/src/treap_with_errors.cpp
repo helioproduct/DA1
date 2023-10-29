@@ -4,15 +4,14 @@ using namespace std;
 
 const int MAX_KEY_LEN = 257;
 
-
 struct node {
-    char *key;
+    char* key;
     int priority;
     uint64_t value;
     node *left, *right;
 };
 
-node* newNode(char *key, uint64_t value) {
+node* newNode(char* key, uint64_t value) {
     node* temp = new node;
 
     temp->key = new char[MAX_KEY_LEN];
@@ -24,7 +23,7 @@ node* newNode(char *key, uint64_t value) {
     return temp;
 }
 
-void destroy(node *node) {
+void destroy(node* node) {
     if (node != nullptr) {
         delete[] node->key;
         destroy(node->left);
@@ -32,8 +31,7 @@ void destroy(node *node) {
     }
 }
 
-
-void split(node* root, node*& left, node*& right, char *key) {
+void split(node* root, node*& left, node*& right, char* key) {
     if (root == nullptr) {
         left = right = nullptr;
         return;
@@ -76,31 +74,28 @@ void insert(node*& root, node* item) {
     }
 }
 
-void remove(node*& root, char *key) {
-    if (root == nullptr)
-        return;
+void remove(node*& root, char* key) {
+    if (root == nullptr) return;
 
-    if (strcmp(root->key,key)==0) {
+    if (strcmp(root->key, key) == 0) {
         node* temp = merge(root->left, root->right);
         delete (root);
         root = temp;
         return;
     }
 
-    if (strcmp(root->key,key)>0)
-        remove(root->left,key);
+    if (strcmp(root->key, key) > 0)
+        remove(root->left, key);
     else
-        remove(root->right,key);
+        remove(root->right, key);
 }
 
-node *search(node *root, char *key) {
+node* search(node* root, char* key) {
     if (root == nullptr) {
         return nullptr;
-    }
-    else if (strcmp(root->key, key) == 0) {
+    } else if (strcmp(root->key, key) == 0) {
         return root;
-    }
-    else if (strcmp(root->key, key) > 0) {
+    } else if (strcmp(root->key, key) > 0) {
         return search(root->left, key);
     }
     return search(root->right, key);
@@ -110,57 +105,60 @@ node *search(node *root, char *key) {
 void inorder(node* root) {
     if (root != nullptr) {
         inorder(root->left);
-        cout << "key: "<< root->key << " | priority: %d " << root->priority << endl;
+        cout << "key: " << root->key << " | priority: %d " << root->priority
+             << endl;
         inorder(root->right);
     }
 }
 
-void toLower(char *str) {
+void toLower(char* str) {
     // Loop through each character in the string
     for (int i = 0; i < strlen(str); i++) {
-        // Use the tolower standard function to convert the character to lowercase
+        // Use the tolower standard function to convert the character to
+        // lowercase
         str[i] = tolower(str[i]);
     }
 }
-
 
 int main() {
     srand(time(nullptr));
     node* root = nullptr;
 
-    char *command = new char[MAX_KEY_LEN];
-    char *key = new char[MAX_KEY_LEN];
+    char* command = new char[MAX_KEY_LEN];
+    char* key = new char[MAX_KEY_LEN];
     uint64_t value;
 
     while (cin >> command) {
-
         if (strcmp(command, "+") == 0) {
             cin >> key >> value;
             toLower(key);
             if (search(root, key)) {
-                cout << "Exist" << "\n";
+                cout << "Exist"
+                     << "\n";
             } else {
                 insert(root, newNode(key, value));
-                cout << "OK" << "\n";
+                cout << "OK"
+                     << "\n";
             }
-        }
-        else if (strcmp(command, "-") == 0) {
+        } else if (strcmp(command, "-") == 0) {
             cin >> key;
             toLower(key);
             if (search(root, key)) {
                 remove(root, key);
-                cout << "OK" << "\n";
+                cout << "OK"
+                     << "\n";
             } else {
-                cout << "NoSuchWord" << "\n";
+                cout << "NoSuchWord"
+                     << "\n";
             }
-        }
-        else {
+        } else {
             toLower(command);
-            node *found_node = search(root, command);
+            node* found_node = search(root, command);
             if (found_node) {
                 cout << "OK: " << found_node->value << "\n";
             } else {
-                cout << "NoSuchWord" << "\n";
+                cout << "NoSuchWord"
+                     << "\n";
             }
         }
     }
